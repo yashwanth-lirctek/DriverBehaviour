@@ -1,0 +1,71 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:997831235062432665",
+      "lastPropertyId": "5:9035149723079704306",
+      "name": "speedData",
+      "properties": [
+        {
+          "id": "1:6434286975530214083",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4860329200339003056",
+          "name": "type",
+          "type": 9
+        },
+        {
+          "id": "3:6760011327718285511",
+          "name": "dateTimeStamp",
+          "type": 6
+        },
+        {
+          "id": "4:2884736686626845502",
+          "name": "note",
+          "type": 9
+        },
+        {
+          "id": "5:9035149723079704306",
+          "name": "speed",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:2329340044276949839",
+      "lastPropertyId": "2:2761606076462034132",
+      "name": "Prefs",
+      "properties": [
+        {
+          "id": "1:5995099871206898850",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2761606076462034132",
+          "name": "speedLimit",
+          "type": 5
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:2329340044276949839",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

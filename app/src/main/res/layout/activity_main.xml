@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:id="@+id/mTopLayout"
+        android:background="@color/purple_700"
+        android:layout_height="?attr/actionBarSize">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/purple_700"
+            app:title="">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:gravity="start|center"
+                    android:text="Speed : "
+                    android:id="@+id/mSpeed"
+                    android:textSize="16sp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_baseline_clear_all_24"
+                    app:tint="@color/white"
+                    android:padding="10dp"
+                    android:id="@+id/mClear"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"/>
+            </RelativeLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_below="@id/mTopLayout"
+        android:layout_height="match_parent"
+        android:id="@+id/mRecyclerView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="No Data"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        android:id="@+id/mNoData"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_alignParentBottom="true" >
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Speed Limit"
+            app:backgroundTint="@color/purple_700"
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:id="@+id/mSpeedLimit"
+            android:gravity="center"
+            android:layout_centerInParent="true"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/mSpeedLimit"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_baseline_remove_24"
+            android:id="@+id/mRemoveButton"
+            app:tint="@color/white"
+            app:backgroundTint="@color/purple_700"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/mSpeedLimit"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_baseline_add_24"
+            android:id="@+id/mAddButton"
+            app:tint="@color/white"
+            app:backgroundTint="@color/purple_700"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

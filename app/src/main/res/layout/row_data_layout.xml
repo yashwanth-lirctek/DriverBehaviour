@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_margin="1dp"
+            android:background="#EEEEEE"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Speed"
+                android:textColor="@color/black"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/black"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:id="@+id/mSpeedData"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="TYPE"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:layout_margin="1dp"
+            android:textSize="15sp"
+            android:background="#EEEEEE"
+            android:id="@+id/mType"
+            android:padding="10dp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1.3"
+            android:layout_height="match_parent"
+            android:text="DATE TIME"
+            android:gravity="center|end"
+            android:textSize="10sp"
+            android:background="#EEEEEE"
+            android:layout_margin="1dp"
+            android:id="@+id/mDateTime"
+            android:padding="10dp"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+</LinearLayout>
