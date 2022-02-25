@@ -8,6 +8,7 @@ object ObjectBox {
 
     lateinit var boxStore: BoxStore
     lateinit var speedBox: Box<SpeedData>
+    lateinit var logBox: Box<LogData>
     lateinit var prefBox: Box<Prefs>
         private set
 
@@ -17,6 +18,7 @@ object ObjectBox {
             .build()
 
         speedBox = boxStore.boxFor(SpeedData::class.java)
+        logBox = boxStore.boxFor(LogData::class.java)
         prefBox = boxStore.boxFor(Prefs::class.java)
     }
 

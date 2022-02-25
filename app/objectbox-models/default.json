@@ -39,7 +39,7 @@
     },
     {
       "id": "2:2329340044276949839",
-      "lastPropertyId": "2:2761606076462034132",
+      "lastPropertyId": "3:3516236152036689344",
       "name": "Prefs",
       "properties": [
         {
@@ -52,12 +52,51 @@
           "id": "2:2761606076462034132",
           "name": "speedLimit",
           "type": 5
+        },
+        {
+          "id": "3:3516236152036689344",
+          "name": "harshLimit",
+          "type": 5
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:2476128367658204923",
+      "lastPropertyId": "5:6997890822216203751",
+      "name": "LogData",
+      "properties": [
+        {
+          "id": "1:1622044872055609567",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8995919460461662906",
+          "name": "rateOverYaw",
+          "type": 9
+        },
+        {
+          "id": "3:4548482984164918134",
+          "name": "yAccCalibrated",
+          "type": 9
+        },
+        {
+          "id": "4:7439184936437228139",
+          "name": "yPreviousAcc",
+          "type": 9
+        },
+        {
+          "id": "5:6997890822216203751",
+          "name": "yAccelerometer",
+          "type": 9
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "2:2329340044276949839",
+  "lastEntityId": "3:2476128367658204923",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

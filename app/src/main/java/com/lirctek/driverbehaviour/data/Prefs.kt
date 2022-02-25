@@ -15,6 +15,12 @@ class Prefs {
             insert(this)
         }
 
+    var harshLimit: Int = 6
+        set(value){
+            field = value
+            insert(this)
+        }
+
     companion object{
 
         private val appPrefData  : Prefs by lazy {

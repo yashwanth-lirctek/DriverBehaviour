@@ -1,5 +1,6 @@
 package com.lirctek.driverbehaviour
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -18,14 +19,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.lirctek.driverbehaviour.data.MainAdapter
-import com.lirctek.driverbehaviour.data.ObjectBox
-import com.lirctek.driverbehaviour.data.Prefs
-import com.lirctek.driverbehaviour.data.SpeedData
+import com.lirctek.driverbehaviour.data.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -33,6 +34,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     lateinit var mRemoveButton: FloatingActionButton
     lateinit var mAddButton: FloatingActionButton
     lateinit var mSpeedLimit: ExtendedFloatingActionButton
+
+    lateinit var mLogData: TextView
+
+    lateinit var mRemoveHarshButton: FloatingActionButton
+    lateinit var mAddHarshButton: FloatingActionButton
+    lateinit var mHarshLimit: ExtendedFloatingActionButton
+
     lateinit var mRecyclerView: RecyclerView
     lateinit var mSpeed: TextView
     lateinit var mClear: ImageView
@@ -41,6 +49,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     lateinit var mSensorManager: SensorManager
 
     var speedLimit = 40
+    var harshLimit = 40
     var currentSpeed = 0.0f
     var maxSpeed = 0
     var mph = 0
@@ -134,6 +143,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     var turns = 0
     var suddenAcceleration = 0
     var isBrakesApplied = false
+    var isAccelerationApplied = false
 
     var limitExceedCount = 0
     var flag = 0
@@ -151,6 +161,13 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         mRemoveButton = findViewById(R.id.mRemoveButton)
         mAddButton = findViewById(R.id.mAddButton)
         mSpeedLimit = findViewById(R.id.mSpeedLimit)
+
+        mLogData = findViewById(R.id.mLogData)
+
+        mRemoveHarshButton = findViewById(R.id.mRemoveHarshButton)
+        mAddHarshButton = findViewById(R.id.mAddHarshButton)
+        mHarshLimit = findViewById(R.id.mHarshLimit)
+
         mRecyclerView = findViewById<RecyclerView>(R.id.mRecyclerView)
         mSpeed = findViewById(R.id.mSpeed)
         mClear = findViewById(R.id.mClear)
@@ -179,7 +196,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             initData()
         }
 
+        mLogData.setOnClickListener {
+            startActivity(Intent(this, LogDataActivity2::class.java))
+        }
+
         speedLimitData()
+        speedHarshData()
 
         mAddButton.setOnClickListener {
 
@@ -195,8 +217,28 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         }
 
+        mAddHarshButton.setOnClickListener {
+
+            Prefs.getAppPref().speedLimit += 2
+            speedHarshData()
+
+        }
+
+        mRemoveHarshButton.setOnClickListener {
+
+            Prefs.getAppPref().speedLimit -= 2
+            speedHarshData()
+
+        }
+
     }
 
+    private fun speedHarshData() {
+        mHarshLimit.text = "HARSH SPEED Limit : "+Prefs.getAppPref().harshLimit+" MPH"
+        harshLimit = Prefs.getAppPref().harshLimit
+    }
+
+    @SuppressLint("SetTextI18n")
     private fun speedLimitData() {
 
         mSpeedLimit.text = "Speed Limit : "+Prefs.getAppPref().speedLimit+" MPH"
@@ -253,12 +295,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 writeCheck = true
             }
             if (xAccCalibrated > 3 || xAccCalibrated < -3) {
-                overX = overX + 1
+                overX += 1
                 writeCheck = true
                 xAccChange = true
             }
             if (yAccCalibrated > 2.5 || yAccCalibrated < -2.5) {
-                overY = overY + 1
+                overY += 1
                 writeCheck = true
                 yAccChange = true
             }
@@ -271,32 +313,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 finalOverYaw = ((overYaw + 0.4 * overYawQ).toFloat())
             }
 
-            /*
-            Here, one counter on any sensor doesn't reflect the crossing of threshold for 1 time,
-            it just gives the total number of times the data was recorded during "1 crossing"
-            For one time the user makes a rash turn, counter was reach upto 10 for that one single incident
-            */
-
-            // only saving if there is change in the counters
-            if (writeCheck) {
-
-//                //Creating a shared preference
-//                val sharedPreferences: SharedPreferences =
-//                    this@MapsActivity.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
-//
-//                //Creating editor to store values to shared preferences
-//                val editor = sharedPreferences.edit()
-//
-//                //Adding values to editor
-//                editor.putInt("overPitch", finalOverPitch)
-//                editor.putInt("overYaw", finalOverYaw)
-//                editor.putInt("overX", overX)
-//                editor.putInt("overY", overY)
-//
-//                //Saving values to editor
-//                editor.commit()
-//                Log.i("MapsActivity", "finalOverPitch : $finalOverPitch")
-            }
         }
     }
 
@@ -387,12 +403,12 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val xM = FloatArray(9)
         val yM = FloatArray(9)
         val zM = FloatArray(9)
-        val sinX = Math.sin(o[1].toDouble()).toFloat()
-        val cosX = Math.cos(o[1].toDouble()).toFloat()
-        val sinY = Math.sin(o[2].toDouble()).toFloat()
-        val cosY = Math.cos(o[2].toDouble()).toFloat()
-        val sinZ = Math.sin(o[0].toDouble()).toFloat()
-        val cosZ = Math.cos(o[0].toDouble()).toFloat()
+        val sinX = sin(o[1].toDouble()).toFloat()
+        val cosX = cos(o[1].toDouble()).toFloat()
+        val sinY = sin(o[2].toDouble()).toFloat()
+        val cosY = cos(o[2].toDouble()).toFloat()
+        val sinZ = sin(o[0].toDouble()).toFloat()
+        val cosZ = cos(o[0].toDouble()).toFloat()
 
         // rotation about x-axis (displayPitch)
         xM[0] = 1.0f
@@ -456,7 +472,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         // Calculate the angular speed of the sample
         val omegaMagnitude =
-            Math.sqrt((gyroValues[0] * gyroValues[0] + gyroValues[1] * gyroValues[1] + gyroValues[2] * gyroValues[2]).toDouble())
+            sqrt((gyroValues[0] * gyroValues[0] + gyroValues[1] * gyroValues[1] + gyroValues[2] * gyroValues[2]).toDouble())
                 .toFloat()
 
         // Normalize the rotation vector if it's big enough to get the axis
@@ -471,8 +487,8 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         // We will convert this axis-angle representation of the delta rotation
         // into a quaternion before turning it into the rotation matrix.
         val thetaOverTwo = omegaMagnitude * timeFactor
-        val sinThetaOverTwo = Math.sin(thetaOverTwo.toDouble()).toFloat()
-        val cosThetaOverTwo = Math.cos(thetaOverTwo.toDouble()).toFloat()
+        val sinThetaOverTwo = sin(thetaOverTwo.toDouble()).toFloat()
+        val cosThetaOverTwo = cos(thetaOverTwo.toDouble()).toFloat()
         deltaRotationVector[0] = sinThetaOverTwo * normValues[0]
         deltaRotationVector[1] = sinThetaOverTwo * normValues[1]
         deltaRotationVector[2] = sinThetaOverTwo * normValues[2]
@@ -512,7 +528,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 fusedOrientation[2] -= (if (fusedOrientation[2] > Math.PI) 2.0 * Math.PI else 0) as Float
             } else fusedOrientation[2] = filter_coefficient * gyroOrientation[2] + oneMinusCoeff * accMagOrientation[2]
 
-            // Overwrite gyro matrix and orientation with fused orientation to comensate gyro drift
+            // Overwrite gyro matrix and orientation with fused orientation to compensate gyro drift
             gyroMatrix = getRotationMatrixFromOrientation(fusedOrientation)
             System.arraycopy(fusedOrientation, 0, gyroOrientation, 0, 3)
             pitchOut = fusedOrientation[1]
@@ -539,9 +555,22 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         var factorTurn = 0
 
         //calculate rateOverYaw and rateOverPitch by taking the division of pitch/yaw over 30 sec interval
-        var rateOverPitch: Double = (finalOverPitch / count).toDouble()
-        var rateOverYaw: Double = (finalOverYaw / count).toDouble()
+
         override fun run() {
+            val rateOverPitch: Double = (finalOverPitch / count).toDouble()
+            val rateOverYaw: Double = (finalOverYaw / count).toDouble()
+
+            val logData = LogData()
+            logData.rateOverYaw = rateOverYaw.toString()
+            logData.yAccCalibrated = yAccCalibrated.toString()
+            logData.yAccelerometer = yAccelerometer.toString()
+            logData.yPreviousAcc = yPreviousAcc.toString()
+            LogData.insertData(logData)
+
+            Log.e("MAIN_DATA", "newYawOut : "+newYawOut.toString()+" newPitchOut : "+newPitchOut.toString()+
+                    " newYawOutQ : "+newYawOutQ.toString()+" newPitchOutQ : "+newPitchOutQ.toString()+
+                    " xAccCalibrated : "+xAccCalibrated.toString()+" yAccCalibrated : "+yAccCalibrated.toString())
+            Log.e("MAIN_DATA", "writeCheck : "+writeCheck.toString()+" yAccChange : "+yAccChange.toString()+" xAccChange : "+xAccChange.toString())
             if (mph != 0) {
                 speedLimit = mph.toFloat()
             } else {
@@ -549,29 +578,26 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
             if (currentSpeed != 0F) {
                 if (currentSpeed > speedLimit) {
-                    factorSpeed = 10
-                    runOnUiThread(Runnable {
+                    runOnUiThread {
 
                         val currentTimeSTamp = System.currentTimeMillis()
                         val lastTimeStamp = SpeedData.getLastTimeStamp()
-                        if ((currentTimeSTamp/1000) - (lastTimeStamp/1000) > 60) {
+                        if ((currentTimeSTamp / 1000) - (lastTimeStamp / 1000) > 60) {
 
                             val speedDataValues = SpeedData()
                             speedDataValues.speed = currentSpeed.toString()
                             speedDataValues.type = "SPEED LIMIT"
                             speedDataValues.note =
-                                "You speed is above the limit, please drive within the speedlimit"
+                                "You speed is above the limit, please drive within the speed Limit"
                             speedDataValues.dateTimeStamp = currentTimeSTamp
                             SpeedData.insertData(speedDataValues)
-                            //"You speed is above the limit, please drive within the speedlimit"
+                            //"You speed is above the limit, please drive within the speed Limit"
                             playSound(speedDataValues)
                         }
-                    })
-                } else {
-                    factorSpeed = 1
+                    }
                 }
+
                 if (isBrakesApplied) {
-                    factorBrakes = 10
                     runOnUiThread(Runnable {
                         val speedDataValues = SpeedData()
                         speedDataValues.speed = currentSpeed.toString()
@@ -582,69 +608,38 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                         //"You shouldn't apply sudden brakes, please be careful"
                         playSound(speedDataValues)
                     })
-                } else {
-                    factorBrakes = 0
+                }
+
+                if (isAccelerationApplied) {
+                    runOnUiThread(Runnable {
+                        val speedDataValues = SpeedData()
+                        speedDataValues.speed = currentSpeed.toString()
+                        speedDataValues.type = "HARSH ACCELERATION"
+                        speedDataValues.note = "Harsh acceleration has been detected, please be safe"
+                        speedDataValues.dateTimeStamp = System.currentTimeMillis()
+                        SpeedData.insertData(speedDataValues)
+                        //"You shouldn't apply sudden brakes, please be careful"
+                        playSound(speedDataValues)
+                    })
                 }
 
                 // writeCheck is the boolean used above to indicate the change in counters in turn and acc
                 if (writeCheck) {
-                    if (rateOverPitch < 0.04) {
-                        factorAcceleration = if (xAccChange) {
-                            // likely unsafe
-                            8
-                        } else {
-                            // likely safe
-                            2
-                        }
-                    } else {
-                        if (xAccChange) {
-                            // definitely unsafe
-                            factorAcceleration = 10
-                            runOnUiThread(Runnable {
-                                val speedDataValues = SpeedData()
-                                speedDataValues.speed = currentSpeed.toString()
-                                speedDataValues.type = "HARSH ACCELERATION"
-                                speedDataValues.note = "Harsh acceleration has been detected, please be safe"
-                                speedDataValues.dateTimeStamp = System.currentTimeMillis()
-                                SpeedData.insertData(speedDataValues)
-                                //"Harsh acceleration has been detected, please be safe"
-                                playSound(speedDataValues)
-                            })
-                        } else {
-                            // probably unsafe
-                            factorAcceleration = 8
-                        }
-                    }
-                    factorTurn = if (rateOverYaw < 0.01) {
+                    if (rateOverYaw >= 0.01) {
                         if (yAccChange) {
-                            // likely unsafe
-                            8
-                        } else {
-                            // likely safe
-                            2
-                        }
-                    } else {
-                        if (yAccChange) {
-                            runOnUiThread(Runnable {
+                            runOnUiThread {
                                 val speedDataValues = SpeedData()
                                 speedDataValues.speed = currentSpeed.toString()
                                 speedDataValues.type = "HARSH TURN"
-                                speedDataValues.note = "Harsh unsafe turn has been detected, please be safe"
+                                speedDataValues.note =
+                                    "Harsh unsafe turn has been detected, please be safe"
                                 speedDataValues.dateTimeStamp = System.currentTimeMillis()
                                 SpeedData.insertData(speedDataValues)
                                 //"Harsh unsafe turn has been detected, please be safe"
                                 playSound(speedDataValues)
-                            })
-                            // definitely unsafe
-                            10
-                        } else {
-                            // probably unsafe
-                            8
+                            }
                         }
                     }
-                } else {
-                    factorAcceleration = 0
-                    factorTurn = 0
                 }
             }
         }
@@ -660,10 +655,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             getFinalOverYaw = finalOverYaw.toInt()
             getFinalOverX = overX
             getFinalOverY = overY
-            Log.i("MapsActivity", "final Pitch : $finalOverPitch")
-            Log.i("MapsActivity", "final Yaw : $finalOverYaw")
-            Log.i("MapsActivity", "final overX : $overX")
-            Log.i("MapsActivity", "final overY : $overY")
         }
     }
 
@@ -695,6 +686,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         mRecyclerView.adapter = MainAdapter(speedDataList)
     }
 
+    @SuppressLint("SetTextI18n")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(location: Location) {
         currentSpeed = location.speed * 2.23f
@@ -707,27 +699,36 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val breakElapsed: Long = tBreakStart - tBreakEnd
         val breakElapsedSeconds = breakElapsed / 1000.0
         val breakSeconds = (breakElapsedSeconds % 60).toInt()
+
         if (breakSeconds % 5 == 0) {
             tempSpeed = currentSpeed
         }
-        if (breakSeconds % 2 == 0 && tempSpeed >= 35 && tempSpeed - currentSpeed >= 20) {
+
+        if (breakSeconds % 2 == 0 && tempSpeed >= 35 && tempSpeed - currentSpeed >= harshLimit) {
             suddenBreaksCount++
             isBrakesApplied = true
         } else {
             isBrakesApplied = false
         }
-        if (breakSeconds % 2 == 0 && currentSpeed - tempSpeed >= 20) {
+
+        if (breakSeconds % 2 == 0 && currentSpeed - tempSpeed >= harshLimit) {
             suddenAcceleration++
+            isAccelerationApplied = true
+        }else{
+            isAccelerationApplied = false
         }
+
         if (currentSpeed > mph) {
             if (flag == 0) {
                 limitExceedCount++
                 flag = 1
             }
         }
+
         if (currentSpeed < mph) {
             flag = 0
         }
+
         if (maxSpeed < currentSpeed) {
             maxSpeed = currentSpeed.toInt()
         }

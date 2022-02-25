@@ -23,24 +23,37 @@
                 android:layout_height="match_parent">
 
                 <TextView
+                    android:id="@+id/mSpeed"
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center"
+                    android:text="Speed : "
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     android:gravity="start|center"
-                    android:text="Speed : "
-                    android:id="@+id/mSpeed"
+                    android:text="LOG"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:layout_toStartOf="@id/mClear"
+                    android:id="@+id/mLogData"
                     android:textSize="16sp"/>
 
                 <ImageView
+                    android:id="@+id/mClear"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_baseline_clear_all_24"
-                    app:tint="@color/white"
-                    android:padding="10dp"
-                    android:id="@+id/mClear"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerInParent="true"/>
+                    android:layout_centerInParent="true"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_baseline_clear_all_24"
+                    app:tint="@color/white" />
             </RelativeLayout>
 
         </com.google.android.material.appbar.MaterialToolbar>
@@ -65,39 +78,80 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_alignParentBottom="true" >
+        android:layout_above="@id/bottmOne"
+        android:id="@+id/bottmTwo"
+        android:padding="10dp">
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/mHarshLimit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Speed Limit"
-            app:backgroundTint="@color/purple_700"
-            android:textColor="@color/white"
-            android:padding="10dp"
-            android:id="@+id/mSpeedLimit"
+            android:layout_centerInParent="true"
             android:gravity="center"
-            android:layout_centerInParent="true"/>
+            android:padding="10dp"
+            android:text="HARSH Speed Limit"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/purple_700" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/mRemoveHarshButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toStartOf="@id/mSpeedLimit"
             android:layout_marginEnd="20dp"
+            android:layout_toStartOf="@id/mHarshLimit"
             android:src="@drawable/ic_baseline_remove_24"
-            android:id="@+id/mRemoveButton"
-            app:tint="@color/white"
-            app:backgroundTint="@color/purple_700"/>
+            app:backgroundTint="@color/purple_700"
+            app:tint="@color/white" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/mAddHarshButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/mSpeedLimit"
             android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/mHarshLimit"
             android:src="@drawable/ic_baseline_add_24"
+            app:backgroundTint="@color/purple_700"
+            app:tint="@color/white" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/bottmOne"
+        android:padding="10dp">
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/mSpeedLimit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Speed Limit"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/purple_700" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/mRemoveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_toStartOf="@id/mSpeedLimit"
+            android:src="@drawable/ic_baseline_remove_24"
+            app:backgroundTint="@color/purple_700"
+            app:tint="@color/white" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/mAddButton"
-            app:tint="@color/white"
-            app:backgroundTint="@color/purple_700"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@id/mSpeedLimit"
+            android:src="@drawable/ic_baseline_add_24"
+            app:backgroundTint="@color/purple_700"
+            app:tint="@color/white" />
 
     </RelativeLayout>
 

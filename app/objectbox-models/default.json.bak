@@ -6,7 +6,7 @@
     {
       "id": "1:997831235062432665",
       "lastPropertyId": "5:9035149723079704306",
-      "name": "speedData",
+      "name": "SpeedData",
       "properties": [
         {
           "id": "1:6434286975530214083",
@@ -39,7 +39,7 @@
     },
     {
       "id": "2:2329340044276949839",
-      "lastPropertyId": "2:2761606076462034132",
+      "lastPropertyId": "3:3516236152036689344",
       "name": "Prefs",
       "properties": [
         {
@@ -51,6 +51,11 @@
         {
           "id": "2:2761606076462034132",
           "name": "speedLimit",
+          "type": 5
+        },
+        {
+          "id": "3:3516236152036689344",
+          "name": "harshLimit",
           "type": 5
         }
       ],
